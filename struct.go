@@ -1,13 +1,19 @@
 package openrgb
 
+type orgbHeader struct {
+	deviceID  uint32
+	commandID uint32
+	length    uint32
+}
+
 type Device struct {
-	Type        int
+	Type        uint32
 	Name        string
 	Description string
 	Version     string
 	Serial      string
 	Location    string
-	ActiveMode  int
+	ActiveMode  uint32
 	LEDs        []LED
 	Colors      []Color
 	Modes       []Mode
@@ -27,15 +33,15 @@ type Color struct {
 
 type Mode struct {
 	Name      string
-	Value     int
-	Flags     int
-	MinSpeed  int
-	MaxSpeed  int
-	MinColors int
-	MaxColors int
-	Speed     int
-	Direction int
-	ColorMode int
+	Value     uint32
+	Flags     uint32
+	MinSpeed  uint32
+	MaxSpeed  uint32
+	MinColors uint32
+	MaxColors uint32
+	Speed     uint32
+	Direction uint32
+	ColorMode uint32
 	Colors    []Color
 }
 

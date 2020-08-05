@@ -13,7 +13,15 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Println("Connected to server")
+	count, err := c.GetControllerCount()
+	if err != nil {
+		log.Fatal(err)
+	}
+	for i := 0; i < count; i++ {
+		controller := c.GetDeviceController(i)
+		fmt.Println(controller)
+	}
+
 	time.Sleep(time.Second * 2)
 	c.Close()
 }
