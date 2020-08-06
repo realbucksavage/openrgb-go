@@ -9,25 +9,17 @@ func (d *Device) read(buf []byte) {
 	d.Type = binary.LittleEndian.Uint32(buf[4:])
 	offset += 4
 
-	s, i := readString(buf, offset)
-	d.Name = s
-	offset += i
-
-	s, i = readString(buf, offset)
-	d.Description = s
-	offset += i
-
-	s, i = readString(buf, offset)
-	d.Version = s
-	offset += i
-
-	s, i = readString(buf, offset)
-	d.Serial = s
-	offset += i
-
-	s, i = readString(buf, offset)
-	d.Location = s
-	offset += i
+	for _, st := range []*string{
+		&d.Name,
+		&d.Description,
+		&d.Version,
+		&d.Serial,
+		&d.Location,
+	} {
+		s, i := readString(buf, offset)
+		offset += i
+		*st = s
+	}
 
 	//modeCount := binary.LittleEndian.Uint16(buf[offset:])
 	_ = binary.LittleEndian.Uint16(buf[offset:])
