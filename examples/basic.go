@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/realbucksavage/openrgb-go"
 	"log"
-	"time"
 )
 
 func main() {
@@ -18,10 +17,9 @@ func main() {
 		log.Fatal(err)
 	}
 	for i := 0; i < count; i++ {
-		controller := c.GetDeviceController(i)
+		controller, _ := c.GetDeviceController(i)
 		fmt.Println(controller)
 	}
 
-	time.Sleep(time.Second * 2)
 	c.Close()
 }
