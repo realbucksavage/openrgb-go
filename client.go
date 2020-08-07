@@ -50,8 +50,8 @@ func (c *Client) GetDeviceController(deviceID int) (Device, error) {
 	}
 	message, _ := c.readMessage()
 
-	var d Device
-	if err := d.read(message); err != nil {
+	d, err := readDevice(message)
+	if err != nil {
 		return Device{}, err
 	}
 
@@ -90,4 +90,3 @@ func (c *Client) readMessage() ([]byte, error) {
 
 	return buf, nil
 }
-
