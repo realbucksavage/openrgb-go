@@ -19,8 +19,9 @@ type Device struct {
 	Zones       []Zone
 }
 
-func (d *Device) read(buf []byte) error {
+func readDevice(buf []byte) (Device, error) {
 
+	var d Device
 	offset := offset32LEBits
 
 	d.Type = binary.LittleEndian.Uint32(buf[4:])
@@ -46,7 +47,7 @@ func (d *Device) read(buf []byte) error {
 
 	modes, i, err := readMode(buf, modeCount, offset)
 	if err != nil {
-		return err
+		return Device{}, err
 	}
 
 	offset = i
@@ -64,7 +65,7 @@ func (d *Device) read(buf []byte) error {
 
 	leds, i, err := readLEDs(buf, ledCount, offset)
 	if err != nil {
-		return err
+		return Device{}, err
 	}
 	offset = i
 	d.LEDs = leds
@@ -76,13 +77,13 @@ func (d *Device) read(buf []byte) error {
 	for i := uint16(0); i < colorCount; i++ {
 		color, err := readColor(buf, offset)
 		if err != nil {
-			return err
+			return Device{}, err
 		}
 		d.Colors = append(d.Colors, color)
 		offset += 4
 	}
 
-	return nil
+	return d, nil
 }
 
 func (d Device) String() string {
