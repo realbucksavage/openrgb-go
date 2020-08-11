@@ -5,6 +5,12 @@ import (
 	"encoding/binary"
 )
 
+var (
+	offset8BEBits  = 1
+	offset16LEBits = 2
+	offset32LEBits = 4
+)
+
 type orgbHeader struct {
 	deviceID  uint32
 	commandID uint32
@@ -19,21 +25,19 @@ func readString(buf []byte, offset int) (string, int) {
 }
 
 func encodeHeader(command, device, length int) *bytes.Buffer {
-	offset := 4
-	b := make([]byte, 16)
-	for idx, v := range "ORGB" {
-		b[idx] = byte(v)
+	b := bytes.NewBufferString("ORGB")
+
+	for _, v := range []uint32{
+		uint32(device),
+		uint32(command),
+		uint32(length),
+	} {
+		buf := make([]byte, offset32LEBits)
+		binary.LittleEndian.PutUint32(buf, v)
+		b.Write(buf)
 	}
 
-	b[offset] = byte(device)
-	offset += 4
-
-	b[offset] = byte(command)
-	offset += 4
-
-	b[offset] = byte(length)
-
-	return bytes.NewBuffer(b)
+	return b
 }
 
 func decodeHeader(buffer []byte) orgbHeader {

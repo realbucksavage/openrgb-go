@@ -29,7 +29,7 @@ func readZones(buf []byte, count uint16, offset int) ([]Zone, int) {
 			&z.TotalLEDs,
 		} {
 			*ptr = binary.LittleEndian.Uint32(buf[offset:])
-			offset += 4
+			offset += offset32LEBits
 		}
 
 		matrixSize := binary.LittleEndian.Uint16(buf[offset:])

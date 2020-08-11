@@ -21,10 +21,10 @@ type Device struct {
 
 func (d *Device) read(buf []byte) error {
 
-	offset := 4
+	offset := offset32LEBits
 
 	d.Type = binary.LittleEndian.Uint32(buf[4:])
-	offset += 4
+	offset += offset32LEBits
 
 	for _, st := range []*string{
 		&d.Name,
@@ -39,10 +39,10 @@ func (d *Device) read(buf []byte) error {
 	}
 
 	modeCount := binary.LittleEndian.Uint16(buf[offset:])
-	offset += 2
+	offset += offset16LEBits
 
 	d.ActiveMode = binary.LittleEndian.Uint32(buf[offset:])
-	offset += 4
+	offset += offset32LEBits
 
 	modes, i, err := readMode(buf, modeCount, offset)
 	if err != nil {
@@ -53,14 +53,14 @@ func (d *Device) read(buf []byte) error {
 	d.Modes = modes
 
 	zoneCount := binary.LittleEndian.Uint16(buf[offset:])
-	offset += 2
+	offset += offset16LEBits
 
 	zones, i := readZones(buf, zoneCount, offset)
 	d.Zones = zones
 	offset = i
 
 	ledCount := binary.LittleEndian.Uint16(buf[offset:])
-	offset += 2
+	offset += offset16LEBits
 
 	leds, i, err := readLEDs(buf, ledCount, offset)
 	if err != nil {
@@ -70,7 +70,7 @@ func (d *Device) read(buf []byte) error {
 	d.LEDs = leds
 
 	colorCount := binary.LittleEndian.Uint16(buf[offset:])
-	offset += 2
+	offset += offset16LEBits
 
 	d.Colors = make([]Color, 0)
 	for i := uint16(0); i < colorCount; i++ {

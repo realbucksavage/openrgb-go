@@ -58,6 +58,32 @@ func (c *Client) GetDeviceController(deviceID int) (Device, error) {
 	return d, nil
 }
 
+func (c *Client) UpdateLEDs(deviceID int, colors []Color) error {
+	lenColors := len(colors)
+	size := 2 + (4 * lenColors)
+
+	colorsBuffer := make([]byte, size)
+	colorsBuffer[0] = byte(lenColors)
+
+	for i, color := range colors {
+		offset := 2 + (i * 4)
+
+		colorsBuffer[offset] = color.Red
+		colorsBuffer[offset+1] = color.Green
+		colorsBuffer[offset+2] = color.Blue
+	}
+
+	prefixBuffer := make([]byte, 4)
+	prefixBuffer[0] = byte(size)
+
+	cmd := bytes.NewBuffer(prefixBuffer)
+	if _, err := cmd.Write(colorsBuffer); err != nil {
+		return err
+	}
+
+	return c.sendMessage(commandUpdateLEDs, deviceID, cmd)
+}
+
 func (c *Client) sendMessage(command, deviceID int, buffer *bytes.Buffer) error {
 	bufLen := 0
 	if buffer != nil {
@@ -65,6 +91,7 @@ func (c *Client) sendMessage(command, deviceID int, buffer *bytes.Buffer) error 
 	}
 
 	header := encodeHeader(command, deviceID, bufLen)
+
 	if buffer != nil {
 		header.Write(buffer.Bytes())
 	}
@@ -90,4 +117,3 @@ func (c *Client) readMessage() ([]byte, error) {
 
 	return buf, nil
 }
-

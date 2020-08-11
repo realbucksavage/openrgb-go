@@ -40,11 +40,11 @@ func readMode(buf []byte, modeCount uint16, offset int) ([]Mode, int, error) {
 			&mode.ColorMode,
 		} {
 			*ptr = binary.LittleEndian.Uint32(buf[offset:])
-			offset += 4
+			offset += offset32LEBits
 		}
 
 		colorLength := binary.LittleEndian.Uint16(buf[offset:])
-		offset += 2
+		offset += offset16LEBits
 
 		var ci uint16 = 0
 		for ; ci < colorLength; ci++ {
@@ -52,7 +52,7 @@ func readMode(buf []byte, modeCount uint16, offset int) ([]Mode, int, error) {
 			if err != nil {
 				return nil, 0, err
 			}
-			offset += 4
+			offset += offset32LEBits
 			colors = append(colors, color)
 		}
 
