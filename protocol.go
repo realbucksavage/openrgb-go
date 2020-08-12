@@ -24,13 +24,13 @@ func readString(buf []byte, offset int) (string, int) {
 	return string(b), length + 2
 }
 
-func encodeHeader(command, device, length int) *bytes.Buffer {
+func encodeHeader(header orgbHeader) *bytes.Buffer {
 	b := bytes.NewBufferString("ORGB")
 
 	for _, v := range []uint32{
-		uint32(device),
-		uint32(command),
-		uint32(length),
+		header.deviceID,
+		header.commandID,
+		header.length,
 	} {
 		buf := make([]byte, offset32LEBits)
 		binary.LittleEndian.PutUint32(buf, v)

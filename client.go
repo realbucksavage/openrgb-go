@@ -90,7 +90,11 @@ func (c *Client) sendMessage(command, deviceID int, buffer *bytes.Buffer) error 
 		bufLen = buffer.Len()
 	}
 
-	header := encodeHeader(command, deviceID, bufLen)
+	header := encodeHeader(orgbHeader{
+		deviceID:  uint32(deviceID),
+		commandID: uint32(command),
+		length:    uint32(bufLen),
+	})
 
 	if buffer != nil {
 		header.Write(buffer.Bytes())
