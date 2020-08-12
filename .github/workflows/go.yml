@@ -27,10 +27,11 @@ jobs:
         go get github.com/robertkrimen/godocdown/godocdown
         mkdir docs
         godocdown > docs/README.md
+        cat docs/README.md
 
     - name: Push docs
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        directory: ./docs
+        directory: 'docs'
         branch: docs
