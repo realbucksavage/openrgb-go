@@ -1,5 +1,6 @@
 package openrgb
 
+// LED represents an LED light on a controller.
 type LED struct {
 	Name  string
 	Value Color

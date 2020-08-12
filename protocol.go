@@ -11,6 +11,15 @@ var (
 	offset32LEBits = 4
 )
 
+const (
+	commandSetClientName          = 50
+	commandRequestControllerCount = 0
+	commandRequestControllerData  = 1
+	commandUpdateLEDs             = 1050
+	commandUpdateZoneLEDs         = 1051
+	commandSetCustomMode          = 1100
+)
+
 type orgbHeader struct {
 	deviceID  uint32
 	commandID uint32

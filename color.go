@@ -6,6 +6,7 @@ import (
 	"fmt"
 )
 
+// Color represents an RGB color.
 type Color struct {
 	Red   uint8
 	Green uint8

@@ -5,6 +5,7 @@ import (
 	"fmt"
 )
 
+// Device represents a controller registered by the OpenRGB Server.
 type Device struct {
 	Type        uint32
 	Name        string

@@ -5,6 +5,7 @@ import (
 	"fmt"
 )
 
+// Mode is a controller's lighting mode (static, breathing, etc).
 type Mode struct {
 	Name      string
 	Value     uint32

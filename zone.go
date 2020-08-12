@@ -5,6 +5,7 @@ import (
 	"fmt"
 )
 
+// Zone represents a controller's color zone.
 type Zone struct {
 	Name      string
 	Type      uint32

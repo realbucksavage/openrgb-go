@@ -7,14 +7,18 @@ import (
 	"net"
 )
 
+// Client is a TCP client that connects to the OpenRGB Server.
 type Client struct {
 	clientSock net.Conn
 }
 
+// Close the underlying TCP socket.
 func (c *Client) Close() error {
 	return c.clientSock.Close()
 }
 
+// Connect takes in the host and port of the OpenRGB server and creates a TCP socket.
+// Returns a `*Client` or and error.
 func Connect(host string, port int) (*Client, error) {
 	addr := fmt.Sprintf("%s:%d", host, port)
 	sock, err := net.Dial("tcp", addr)
@@ -32,6 +36,9 @@ func Connect(host string, port int) (*Client, error) {
 	return c, nil
 }
 
+// GetGetControllerCount returns the total number of devices detected by OpenRGB.
+// The controller count starts from 0, which means, for `n` number of controllers,
+// the count will be `n-1`.
 func (c *Client) GetControllerCount() (int, error) {
 	err := c.sendMessage(commandRequestControllerCount, 0, nil)
 	if err != nil {
@@ -44,6 +51,8 @@ func (c *Client) GetControllerCount() (int, error) {
 	return count, nil
 }
 
+// GetDeviceController queries the OpenRGB server for a device and returns its `openrgb.Device`
+// representation. The `deviceID` parameter is an index that starts from 0.
 func (c *Client) GetDeviceController(deviceID int) (Device, error) {
 	if err := c.sendMessage(commandRequestControllerData, deviceID, nil); err != nil {
 		return Device{}, err
