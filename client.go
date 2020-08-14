@@ -67,6 +67,8 @@ func (c *Client) GetDeviceController(deviceID int) (Device, error) {
 	return d, nil
 }
 
+// UpdateLEDs updates multiple LEDs on device-level. Length of the `colors` parameter
+// MUST match the length of `openrgb.Device.Colors`.
 func (c *Client) UpdateLEDs(deviceID int, colors []Color) error {
 	lenColors := len(colors)
 	size := 2 + (4 * lenColors)
@@ -76,6 +78,35 @@ func (c *Client) UpdateLEDs(deviceID int, colors []Color) error {
 
 	for i, color := range colors {
 		offset := 2 + (i * 4)
+
+		colorsBuffer[offset] = color.Red
+		colorsBuffer[offset+1] = color.Green
+		colorsBuffer[offset+2] = color.Blue
+	}
+
+	prefixBuffer := make([]byte, 4)
+	prefixBuffer[0] = byte(size)
+
+	cmd := bytes.NewBuffer(prefixBuffer)
+	if _, err := cmd.Write(colorsBuffer); err != nil {
+		return err
+	}
+
+	return c.sendMessage(commandUpdateLEDs, deviceID, cmd)
+}
+
+// UpdateZoneLEDs updates multiple LEDs on zone-level. Length of the `colors` parameter
+// MUST match the length of `Colors` parameter in `openrgb.Zone`
+func (c *Client) UpdateZoneLEDs(deviceID, zoneID int, colors []Color) error {
+	lenColors := len(colors)
+	size := 6 + (4 * lenColors)
+
+	colorsBuffer := make([]byte, size)
+	colorsBuffer[0] = byte(zoneID)
+	colorsBuffer[offset32LEBits] = byte(lenColors)
+
+	for i, color := range colors {
+		offset := 6 + (i * 4)
 
 		colorsBuffer[offset] = color.Red
 		colorsBuffer[offset+1] = color.Green
