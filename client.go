@@ -18,7 +18,7 @@ func (c *Client) Close() error {
 }
 
 // Connect takes in the host and port of the OpenRGB server and creates a TCP socket.
-// Returns a `*Client` or and error.
+// Returns an instance of `*openrgb.Client` or an error.
 func Connect(host string, port int) (*Client, error) {
 	addr := fmt.Sprintf("%s:%d", host, port)
 	sock, err := net.Dial("tcp", addr)

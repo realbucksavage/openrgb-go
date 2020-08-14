@@ -11,6 +11,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer c.Close()
 
 	count, err := c.GetControllerCount()
 	if err != nil {
@@ -30,6 +31,4 @@ func main() {
 			log.Fatal(err)
 		}
 	}
-
-	c.Close()
 }
