@@ -45,7 +45,10 @@ func (c *Client) GetControllerCount() (int, error) {
 		return 0, err
 	}
 
-	message, _ := c.readMessage()
+	message, err := c.readMessage()
+	if err != nil {
+		return 0, err
+	}
 	count := int(binary.LittleEndian.Uint32(message))
 
 	return count, nil
@@ -57,7 +60,10 @@ func (c *Client) GetDeviceController(deviceID int) (Device, error) {
 	if err := c.sendMessage(commandRequestControllerData, deviceID, nil); err != nil {
 		return Device{}, err
 	}
-	message, _ := c.readMessage()
+	message, err := c.readMessage()
+	if err != nil {
+		return Device{}, err
+	}
 
 	d, err := readDevice(message)
 	if err != nil {
@@ -141,9 +147,6 @@ func (c *Client) sendMessage(command, deviceID int, buffer *bytes.Buffer) error 
 	}
 
 	_, err := c.clientSock.Write(header.Bytes())
-	if err != nil {
-		return err
-	}
 
 	return err
 }
@@ -159,5 +162,5 @@ func (c *Client) readMessage() ([]byte, error) {
 	buf = make([]byte, header.length)
 	_, err = c.clientSock.Read(buf)
 
-	return buf, nil
+	return buf, err
 }
