@@ -91,7 +91,7 @@ func (c *Client) UpdateLEDs(deviceID int, colors []Color) error {
 	}
 
 	prefixBuffer := make([]byte, 4)
-	prefixBuffer[0] = byte(size)
+	prefixBuffer[0] = byte(size + 4)
 
 	cmd := bytes.NewBuffer(prefixBuffer)
 	if _, err := cmd.Write(colorsBuffer); err != nil {
@@ -120,7 +120,7 @@ func (c *Client) UpdateZoneLEDs(deviceID, zoneID int, colors []Color) error {
 	}
 
 	prefixBuffer := make([]byte, 4)
-	prefixBuffer[0] = byte(size)
+	prefixBuffer[0] = byte(size + 4)
 
 	cmd := bytes.NewBuffer(prefixBuffer)
 	if _, err := cmd.Write(colorsBuffer); err != nil {
