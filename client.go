@@ -127,7 +127,7 @@ func (c *Client) UpdateZoneLEDs(deviceID, zoneID int, colors []Color) error {
 		return err
 	}
 
-	return c.sendMessage(commandUpdateLEDs, deviceID, cmd)
+	return c.sendMessage(commandUpdateZoneLEDs, deviceID, cmd)
 }
 
 func (c *Client) sendMessage(command, deviceID int, buffer *bytes.Buffer) error {
